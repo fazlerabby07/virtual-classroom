@@ -1,0 +1,36 @@
+version: "3.1"
+# Intended for Development ONLY
+services:
+  classroom-nodejs-app: # Main App
+    build: .
+    env_file:
+      - ./.env
+    volumes:
+      - ./src:/opt/app/src
+    ports:
+      - ${PORT}:${PORT}
+    restart: unless-stopped
+    depends_on:
+      - classroom-mongo
+    healthcheck:
+      test: ["CMD","nc","-z","localhost","5000"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+    command: nodemon src/index.js
+  classroom-mongo: # Mongo
+    image: mongo:4-bionic
+    restart: unless-stopped
+    logging:
+      driver: none
+    volumes:
+      - database_vol:/data/db
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: ["CMD","nc","-z","localhost","27017"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+volumes:
+  database_vol:
