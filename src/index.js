@@ -6,6 +6,7 @@ const cors = require('cors');
 const db = require('./configs/db');
 const { createSuperAdminUser } = require('./helpers/superAdminGenerator');
 const path = require('path');
+const errorHandler = require('./middlewares/errors');
 // Load Middlewares
 app.use(express.json());
 app.use(cors());
@@ -13,10 +14,12 @@ app.use(cors());
 app.use('/api/v1/pvt', auth.jwtDetails);
 // Load Routes
 app.use(routes);
-app.use(express.static(path.join(__dirname,'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 // create admin blueprint
 createSuperAdminUser();
 
+// Error handler
+app.use(errorHandler);
 // Listen to the Port
 const PORT = process.env.PORT || 5000;
 

@@ -5,3 +5,4 @@ scripts/backup/
 .vscode
 .DS_Store
 logs/
+src/public
