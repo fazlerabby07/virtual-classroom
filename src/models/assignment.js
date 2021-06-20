@@ -26,9 +26,13 @@ const assignmentSchema = new Schema(
 			required: true,
 			trim: true,
 		},
-		lastDateOfsubmition : {
+		startDate: {
 			type: Date,
-			required:true
+			required: true,
+		},
+		lastDateOfsubmition: {
+			type: Date,
+			required: true,
 		},
 		result: {
 			type: [
@@ -68,8 +72,8 @@ const assignmentSchema = new Schema(
 		isNotifyStudent: {
 			type: Boolean,
 			require: true,
-			default: false
-		}
+			default: false,
+		},
 	},
 	{ timestamps: true },
 );

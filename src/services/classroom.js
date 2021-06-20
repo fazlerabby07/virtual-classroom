@@ -19,9 +19,11 @@ const getAllClassroom = async () => {
 			Classroom.find()
 				.populate({
 					path: 'teacher',
+					select: { fullName: 1 },
 				})
 				.populate({
 					path: 'enrolledStudents',
+					select: { fullName: 1, schoolId: 1 },
 				})
 				.sort({ createdAt: 'desc' }),
 		);
@@ -39,9 +41,11 @@ const getClassRoomById = async (id) => {
 			Classroom.findOne({ _id: id })
 				.populate({
 					path: 'teacher',
+					select: { fullName: 1 },
 				})
 				.populate({
 					path: 'enrolledStudents',
+					select: { fullName: 1, schoolId: 1 },
 				}),
 		);
 		if (!classroomErr) {
@@ -58,9 +62,11 @@ const getClassRoomByInvitationCode = async (invitationCode) => {
 			Classroom.findOne({ invitationCode: invitationCode })
 				.populate({
 					path: 'teacher',
+					select: { fullName: 1 },
 				})
 				.populate({
 					path: 'enrolledStudents',
+					select: { fullName: 1, schoolId: 1 },
 				}),
 		);
 		if (!classroomErr) {
@@ -77,9 +83,11 @@ const updateClassroom = async (id, classroomInfo) => {
 			Classroom.findByIdAndUpdate({ _id: id }, classroomInfo, { new: true })
 				.populate({
 					path: 'teacher',
+					select: { fullName: 1 },
 				})
 				.populate({
 					path: 'enrolledStudents',
+					select: { fullName: 1, schoolId: 1 },
 				}),
 		);
 		if (!classroomErr) {
@@ -114,8 +122,8 @@ const assignStudent = async (id, studentId) => {
 				},
 				{ new: true },
 			)
-				.populate({ path: 'teacher' })
-				.populate({ path: 'enrolledStudents' }),
+				.populate({ path: 'teacher', select: { fullName: 1 } })
+				.populate({ path: 'enrolledStudents', select: { fullName: 1, schoolId: 1 } }),
 		);
 		if (!classroomErr) {
 			return resolve(classroom);
@@ -131,9 +139,11 @@ const studentAssignedClassroom = async (classroomId, studentId) => {
 			Classroom.findOne({ _id: classroomId, enrolledStudents: studentId })
 				.populate({
 					path: 'teacher',
+					select: { fullName: 1 },
 				})
 				.populate({
 					path: 'enrolledStudents',
+					select: { fullName: 1, schoolId: 1 },
 				}),
 		);
 		if (!classroomErr) {

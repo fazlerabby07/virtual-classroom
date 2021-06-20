@@ -27,12 +27,30 @@ const getAssignmentById = async (id) => {
 		}
 	});
 };
-
+const getAllAssignment = async () => {
+	return new Promise(async (resolve, reject) => {
+		const [assignmentsErr, assignments] = await _p(
+			Assignment.find().populate({
+				path: 'classroomId',
+				select: { title: 1, enrolledStudents: 1 },
+				populate: {
+					path: 'enrolledStudents',
+					select: { fullName: 1, email: 1 },
+				},
+			}),
+		);
+		if (!assignmentsErr) {
+			return resolve(assignments);
+		} else {
+			return reject(assignmentsErr.message);
+		}
+	});
+};
 const getAllAssignmentByClassroomId = async (classroomId) => {
 	return new Promise(async (resolve, reject) => {
 		const [assignmentsErr, assignments] = await _p(
 			Assignment.find({ classroomId: classroomId })
-				.populate({ path: 'classroomId', select: { titel: 1, enrolledStudents: 1 } })
+				.populate({ path: 'classroomId', select: { title: 1, enrolledStudents: 1 } })
 				.populate({ path: 'result.studentId', select: { fullName: 1, schoolId: 1 } })
 				.populate({ path: 'submission.studentId', select: { fullName: 1, schoolId: 1 } })
 				.populate({ path: 'teacherId', select: { fullName: 1 } }),
@@ -45,22 +63,22 @@ const getAllAssignmentByClassroomId = async (classroomId) => {
 	});
 };
 
-const updateAssignmentById = async(id, updatedAssignment) => {
+const updateAssignmentById = async (id, updatedAssignment) => {
 	return new Promise(async (resolve, reject) => {
 		const [assignmentErr, assignment] = await _p(
-			Assignment.findOneAndUpdate({_id: id}, updatedAssignment, {new: true})
-			.populate({ path: 'result.studentId', select: { fullName: 1, schoolId: 1 } })
-			.populate({ path: 'submission.studentId', select: { fullName: 1, schoolId: 1 } })
-			.populate({ path: 'teacherId', select: { fullName: 1 } }),
+			Assignment.findOneAndUpdate({ _id: id }, updatedAssignment, { new: true })
+				.populate({ path: 'result.studentId', select: { fullName: 1, schoolId: 1 } })
+				.populate({ path: 'submission.studentId', select: { fullName: 1, schoolId: 1 } })
+				.populate({ path: 'teacherId', select: { fullName: 1 } }),
 		);
 
-		if(!assignmentErr) {
+		if (!assignmentErr) {
 			return resolve(assignment);
 		} else {
 			return reject(assignmentErr.message);
 		}
-	})
-}
+	});
+};
 
 const uploadAssignmentByStudent = async (assignmentId, assignmentInfo) => {
 	return new Promise(async (resolve, reject) => {
@@ -119,7 +137,7 @@ const uploadResult = async (assignmentId, resultInfo) => {
 const checkAssignmentSubmitedByStudent = async (assignmentId, studentId) => {
 	return new Promise(async (resolve, reject) => {
 		const [assignmentErr, assignment] = await _p(
-			Assignment.find({ _id: assignmentId, 'submission.studentId': studentId })
+			Assignment.find({ _id: assignmentId, 'submission.studentId': studentId }),
 		);
 		if (!assignmentErr) {
 			return resolve(assignment);
@@ -148,6 +166,7 @@ const getAssignmentResultForStudent = async (assignmentId, studentId) => {
 module.exports = {
 	createAssignment,
 	getAssignmentById,
+	getAllAssignment,
 	getAllAssignmentByClassroomId,
 	updateAssignmentById,
 	uploadAssignmentByStudent,

@@ -7,6 +7,8 @@ const db = require('./configs/db');
 const { createSuperAdminUser } = require('./helpers/superAdminGenerator');
 const path = require('path');
 const errorHandler = require('./middlewares/errors');
+const corn = require('./services/cron');
+
 // Load Middlewares
 app.use(express.json());
 app.use(cors());
