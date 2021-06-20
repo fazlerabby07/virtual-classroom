@@ -2,7 +2,7 @@ const Assignment = require('../models/assignment');
 const _p = require('../helpers/simpleasync');
 
 const createAssignment = async (assignmentInfo) => {
-	return new Promise((resolve, reject) => {
+	return new Promise(async (resolve, reject) => {
 		const [createAssignmentErr, createAssignment] = await _p(Assignment.create(assignmentInfo));
 		if (!createAssignmentErr) {
 			return resolve(createAssignment);
@@ -12,10 +12,10 @@ const createAssignment = async (assignmentInfo) => {
 	});
 };
 
-const getAllAssignmentByClassroomId = async (classroomId) => {
-	return new Promise((resolve, reject) => {
+const getAssignmentById = async (id) => {
+	return new Promise(async (resolve, reject) => {
 		const [assignmentsErr, assignments] = await _p(
-			Assignment.find({ classroomId: classroomId })
+			Assignment.find({ _id: id })
 				.populate({ path: 'result.studentId', select: { fullName: 1, schoolId: 1 } })
 				.populate({ path: 'submission.studentId', select: { fullName: 1, schoolId: 1 } })
 				.populate({ path: 'teacherId', select: { fullName: 1 } }),
@@ -28,8 +28,42 @@ const getAllAssignmentByClassroomId = async (classroomId) => {
 	});
 };
 
+const getAllAssignmentByClassroomId = async (classroomId) => {
+	return new Promise(async (resolve, reject) => {
+		const [assignmentsErr, assignments] = await _p(
+			Assignment.find({ classroomId: classroomId })
+				.populate({ path: 'classroomId', select: { titel: 1, enrolledStudents: 1 } })
+				.populate({ path: 'result.studentId', select: { fullName: 1, schoolId: 1 } })
+				.populate({ path: 'submission.studentId', select: { fullName: 1, schoolId: 1 } })
+				.populate({ path: 'teacherId', select: { fullName: 1 } }),
+		);
+		if (!assignmentsErr) {
+			return resolve(assignments);
+		} else {
+			return reject(assignmentsErr.message);
+		}
+	});
+};
+
+const updateAssignmentById = async(id, updatedAssignment) => {
+	return new Promise(async (resolve, reject) => {
+		const [assignmentErr, assignment] = await _p(
+			Assignment.findOneAndUpdate({_id: id}, updatedAssignment, {new: true})
+			.populate({ path: 'result.studentId', select: { fullName: 1, schoolId: 1 } })
+			.populate({ path: 'submission.studentId', select: { fullName: 1, schoolId: 1 } })
+			.populate({ path: 'teacherId', select: { fullName: 1 } }),
+		);
+
+		if(!assignmentErr) {
+			return resolve(assignment);
+		} else {
+			return reject(assignmentErr.message);
+		}
+	})
+}
+
 const uploadAssignmentByStudent = async (assignmentId, assignmentInfo) => {
-	return new Promise((resolve, reject) => {
+	return new Promise(async (resolve, reject) => {
 		const [assignmentErr, assignment] = await _p(
 			Assignment.findOneAndUpdate(
 				{ _id: assignmentId },
@@ -56,7 +90,7 @@ const uploadAssignmentByStudent = async (assignmentId, assignmentInfo) => {
 };
 
 const uploadResult = async (assignmentId, resultInfo) => {
-	return new Promise((resolve, reject) => {
+	return new Promise(async (resolve, reject) => {
 		const [assignmentErr, assignment] = await _p(
 			Assignment.findOneAndUpdate(
 				{ _id: assignmentId },
@@ -82,8 +116,21 @@ const uploadResult = async (assignmentId, resultInfo) => {
 	});
 };
 
+const checkAssignmentSubmitedByStudent = async (assignmentId, studentId) => {
+	return new Promise(async (resolve, reject) => {
+		const [assignmentErr, assignment] = await _p(
+			Assignment.find({ _id: assignmentId, 'submission.studentId': studentId })
+		);
+		if (!assignmentErr) {
+			return resolve(assignment);
+		} else {
+			return reject(assignmentErr.message);
+		}
+	});
+};
+
 const getAssignmentResultForStudent = async (assignmentId, studentId) => {
-	return new Promise((resolve, reject) => {
+	return new Promise(async (resolve, reject) => {
 		const [assignmentErr, assignment] = await _p(
 			Assignment.find({ _id: assignmentId, 'result.studentId': studentId })
 				.populate({ path: 'result.studentId', select: { fullName: 1, schoolId: 1 } })
@@ -100,8 +147,11 @@ const getAssignmentResultForStudent = async (assignmentId, studentId) => {
 
 module.exports = {
 	createAssignment,
+	getAssignmentById,
 	getAllAssignmentByClassroomId,
+	updateAssignmentById,
 	uploadAssignmentByStudent,
 	uploadResult,
+	checkAssignmentSubmitedByStudent,
 	getAssignmentResultForStudent,
 };

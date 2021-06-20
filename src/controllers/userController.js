@@ -121,9 +121,53 @@ const teacherEmail = async (userInfo) => {
 	return new Promise(async (resolve, reject) => {
 		const subject = 'Teacher Onboard';
 		const emailBody = `
-                        <p>Hello ${userInfo.fullName}</p>
-                        <p>Welcome </p>
-                        <p>Your password is <b>${userInfo.password}</b><p>`;
+		<!DOCTYPE html>
+		<html>
+		<head>
+		<style>
+		.card {
+		  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+		  max-width: 400px;
+		  margin: auto;
+		  text-align: center;
+		  font-family: arial;
+		}
+		
+		.price {
+		  color: grey;
+		  font-size: 22px;
+		}
+		
+		.credential {
+		  border: none;
+		  outline: 0;
+		  padding: 12px;
+		  border-left: 10px solid grey;
+		  color: black;
+		  background-color: #f7f7f7;
+		  text-align: center;
+		  cursor: pointer;
+		  font-size: 18px;
+		}
+		
+		
+		</style>
+		</head>
+		<body>
+		
+		<br>
+		<div class="card">
+		  <img src="https://t4.ftcdn.net/jpg/04/00/59/49/360_F_400594956_UeLC38TNQPsi9SmQwc0mi5ZqFnqlzxjK.jpg" alt="Denim Jeans" style="height:300px;">
+		  <h2 style="text-align:center">Welcome ${userInfo.fullName}!</h2>
+		  <h3>Your teacher registration is successful!</h1>
+		  <p>Here are your login credentials:</p>
+		  <p class="credential">Email:${userInfo.email}  </p>
+		  <p class="credential">Password:${userInfo.password} </p>
+		  <br>
+		</div>
+		
+		</body>
+		</html>`;
 
 		const [eErr, email] = await _p(
 			emailDispatch.send(process.env.EMAIL_USER, userInfo.email, subject, emailBody),

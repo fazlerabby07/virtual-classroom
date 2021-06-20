@@ -5,12 +5,6 @@ if (!process.env.EMAIL_USER && !process.env.EMAIL_PASSWORD) {
 	_log('Email user and password not found in .env file', 'red');
 }
 
-const auth = {
-	auth: {
-		apiKey: process.env.MANDRILL_KEY,
-	},
-};
-
 const transporter = nodeMailer.createTransport({
 	service: 'gmail',
 	auth: {

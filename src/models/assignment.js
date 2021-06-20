@@ -9,6 +9,7 @@ const assignmentSchema = new Schema(
 			type: String,
 			required: true,
 			trim: true,
+			ref: 'Classroom',
 		},
 		title: {
 			type: String,
@@ -20,6 +21,15 @@ const assignmentSchema = new Schema(
 			required: true,
 			ref: 'User',
 		},
+		assignmentFileLink: {
+			type: String,
+			required: true,
+			trim: true,
+		},
+		lastDateOfsubmition : {
+			type: Date,
+			required:true
+		},
 		result: {
 			type: [
 				{
@@ -28,8 +38,6 @@ const assignmentSchema = new Schema(
 						required: true,
 						ref: 'User',
 					},
-				},
-				{
 					marks: {
 						type: Number,
 						required: true,
@@ -57,6 +65,11 @@ const assignmentSchema = new Schema(
 				},
 			],
 		},
+		isNotifyStudent: {
+			type: Boolean,
+			require: true,
+			default: false
+		}
 	},
 	{ timestamps: true },
 );
