@@ -1,5 +1,9 @@
 # virtual-classroom
 
+#### System Design
+![alt text](https://github.com/fazlerabby07/virtual-classroom/blob/master/sd.jpg?raw=true)
+
+
 #### System Requirements (Dev):
 
 * Docker (v18+)
