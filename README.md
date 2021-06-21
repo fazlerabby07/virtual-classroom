@@ -1,7 +1,7 @@
 # virtual-classroom
 
 #### System Design
-![alt text](https://github.com/fazlerabby07/virtual-classroom/blob/master/sd.jpg?raw=true)
+![alt text](https://github.com/fazlerabby07/virtual-classroom/blob/master/sd.png?raw=true)
 
 
 #### System Requirements (Dev):
