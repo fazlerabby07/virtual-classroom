@@ -3,6 +3,8 @@
 #### System Design
 ![alt text](https://github.com/fazlerabby07/virtual-classroom/blob/master/sd.png?raw=true)
 
+#### serverIp
+http://128.199.29.255/
 
 #### System Requirements (Dev):
 
